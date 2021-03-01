@@ -1,0 +1,148 @@
+﻿@model IEnumerable<GameLandWebApplication.Game>
+
+@{
+    ViewData["Title"] = "GameLand TopRatedGames";
+}
+
+<h1>GameLand TopRatedGames</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p> 
+<style>
+    .item{
+    background:rgb(229, 223, 223);
+    border-radius:10px;
+    margin:20px 0 20px 0;
+    padding: 20px;
+    }
+   
+    </style>
+@foreach (var item in Model.OrderByDescending(m=>m.RatingByRedaction).ThenBy(m=>m.GameName)) {
+<div class="item">
+    <a style="font-weight:700; font-size: 17px;" asp-action="Details" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.GameName)</a>
+    <div>
+        <span>ReleaseDate: </span>        
+        <span>
+            @Html.DisplayFor(modelItem => item.GamesPlatforms.FirstOrDefault().ReleaseDate.Day)<span>.</span>@Html.DisplayFor(modelItem => item.GamesPlatforms.FirstOrDefault().ReleaseDate.Month)<span>.</span>@Html.DisplayFor(modelItem => item.GamesPlatforms.FirstOrDefault().ReleaseDate.Year)
+        </span>    
+    </div>
+    <div style="display:flex; ">
+        <span style="padding-right:5px;">Genres: </span>   
+        @foreach (var genre in item.GamesGenres)
+        {
+            <span>
+                @if (genre != item.GamesGenres.Last())
+                {
+                    @Html.DisplayFor(modelItem => genre.Genre.GenreName)<span style="padding-right:4px;">, </span>
+                }
+                else @Html.DisplayFor(modelItem => genre.Genre.GenreName)
+            </span>
+        }
+    </div>
+    <div style="display:flex; ">
+        <span style="padding-right:5px;">Platforms: </span>
+        @foreach (var gamePlatform in item.GamesPlatforms)
+        {
+            <span>
+                @if (gamePlatform != item.GamesPlatforms.Last())
+                {
+                    @Html.DisplayFor(modelItem => gamePlatform.Platform.PlatformName)<span style="padding-right:4px;">, </span>
+                }
+                else @Html.DisplayFor(modelItem => gamePlatform.Platform.PlatformName)
+            </span>
+        }
+    </div>
+    <div>
+        @Html.DisplayFor(modelItem => item.RatingByRedaction)
+    </div>
+    <div>
+        @Html.DisplayFor(modelItem => item.RatingByUsers)
+    </div>
+    <div>
+        @Html.DisplayFor(modelItem => item.Photo)
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a> |
+        <a asp-action="Details" asp-route-id="@item.GameId">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.GameId">Delete</a>
+    </div>
+</div>
+}
+   
+=======
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.GameName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LinkOnSteam)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RatingByRedaction)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RatingByUsers)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Photo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Developer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Publisher)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LinkOnSteam)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RatingByRedaction)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RatingByUsers)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Photo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Developer.DeveloperName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher.PublisherName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.GameId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.GameId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+>>>>>>> eb15bf4be153835adefefae38f7ba251a3dc2fa9

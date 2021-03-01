@@ -1,0 +1,66 @@
+﻿@model GameLandWebApplication.Game
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Game</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GameName" class="control-label"></label>
+                <input asp-for="GameName" class="form-control" />
+                <span asp-validation-for="GameName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeveloperId" class="control-label"></label>
+                <select asp-for="DeveloperId" class ="form-control" asp-items="ViewBag.DeveloperId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="PublisherId" class="control-label"></label>
+                <select asp-for="PublisherId" class ="form-control" asp-items="ViewBag.PublisherId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="LinkOnSteam" class="control-label"></label>
+                <input asp-for="LinkOnSteam" class="form-control" />
+                <span asp-validation-for="LinkOnSteam" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RatingByRedaction" class="control-label"></label>
+                <input asp-for="RatingByRedaction" class="form-control" />
+                <span asp-validation-for="RatingByRedaction" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RatingByUsers" class="control-label"></label>
+                <input asp-for="RatingByUsers" class="form-control" />
+                <span asp-validation-for="RatingByUsers" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Photo" class="control-label"></label>
+                <input asp-for="Photo" class="form-control" />
+                <span asp-validation-for="Photo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
