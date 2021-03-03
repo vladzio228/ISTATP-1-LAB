@@ -37,6 +37,9 @@ namespace GameLandWebApplication.Controllers
             var game = await _context.Games
                 .Include(g => g.Developer)
                 .Include(g => g.Publisher)
+                .Include(g => g.GamesGenres).ThenInclude(g => g.Genre)
+                .Include(g => g.GamesPlatforms).ThenInclude(g => g.Platform)
+                .Include(g => g.GamesSystemRequirements).ThenInclude(g => g.SystemRequirement)
                 .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
             {
