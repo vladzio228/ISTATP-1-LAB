@@ -2,8 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-using GameLandWebApplication.Models;
-
 #nullable disable
 
 namespace GameLandWebApplication
@@ -64,8 +62,6 @@ namespace GameLandWebApplication
                 entity.Property(e => e.GameName)
                     .IsRequired()
                     .HasMaxLength(50);
-
-                entity.Property(e => e.Photo).HasColumnType("image");
 
                 entity.Property(e => e.PublisherId).HasColumnName("PublisherID");
 

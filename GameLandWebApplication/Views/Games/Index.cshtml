@@ -61,7 +61,7 @@
             (@Html.DisplayName(item.GamesUsers.Count().ToString())) users
     </div>
     <div>
-      <img src="@Html.DisplayFor(modelItem => item.Photo)"/>
+     <a asp-action="Details" asp-route-id="@item.GameId"><img src="@Html.DisplayFor(modelItem => item.Photo)" style="max-height: 250px; width: auto;"/></a>
     </div>
     <div>
         <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a> |

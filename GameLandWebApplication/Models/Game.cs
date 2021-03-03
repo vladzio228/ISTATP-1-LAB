@@ -22,7 +22,7 @@ namespace GameLandWebApplication
         public string LinkOnSteam { get; set; }
         public double? RatingByRedaction { get; set; }
         public string Description { get; set; }
-        public byte[] Photo { get; set; }
+        public string Photo { get; set; }
 
         public virtual Developer Developer { get; set; }
         public virtual Publisher Publisher { get; set; }
