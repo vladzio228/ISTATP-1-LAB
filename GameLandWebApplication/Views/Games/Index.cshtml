@@ -18,7 +18,7 @@
     }
    
     </style>
-@foreach (var item in Model.OrderByDescending(m=>m.RatingByRedaction).ThenBy(m=>m.GameName)) {
+@foreach (var item in Model.OrderByDescending(m => m.RatingByRedaction).ThenBy(m => m.GameName)) {
 <div class="item">
     <a style="font-weight:700; font-size: 17px; text-decoration:none;color:black;" asp-action="Details" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.GameName)</a>
     <div>
@@ -42,7 +42,7 @@
     </div>
     <div style="display:flex; ">
         <span style="padding-right:5px;">Platforms: </span>
-        @foreach (var gamePlatform in item.GamesPlatforms)
+        @foreach (var gamePlatform in item.GamesPlatforms.OrderBy(m => m.ReleaseDate).ThenBy(m => m.PlatformId))
         {
             <span>
                 @if (gamePlatform != item.GamesPlatforms.Last())
@@ -53,11 +53,11 @@
             </span>
         }
     </div>
-    <div>
-        @Html.DisplayFor(modelItem => item.RatingByRedaction)
+    <div style="margin-right:4px;">
+        @Html.DisplayFor(modelItem => item.RatingByRedaction) redaction
     </div>
-    <div>
-        @Html.DisplayFor(modelItem => item.RatingByUsers)
+    <div style="margin-right:4px;">
+        @Html.DisplayFor(modelItem => item.GamesUsers.Average(q => q.Rate)) users(@{item.GamesUsers.Count();})
     </div>
     <div>
         @Html.DisplayFor(modelItem => item.Photo)
