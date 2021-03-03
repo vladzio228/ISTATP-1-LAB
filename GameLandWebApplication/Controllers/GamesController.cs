@@ -22,8 +22,9 @@ namespace GameLandWebApplication.Controllers
         public async Task<IActionResult> Index()
         {
             var gameLandContext = _context.Games.Include(g => g.Developer).Include(g => g.Publisher).Include(g => g.GamesGenres).ThenInclude(g => g.Genre).Include(g => g.GamesPlatforms).ThenInclude(g => g.Platform).
-            Include(g => g.GamesSystemRequirements).ThenInclude(g => g.SystemRequirement).Include(g => g.GamesUsers).ThenInclude(g => g.User);           
-            return View(await gameLandContext.ToListAsync());
+            Include(g => g.GamesSystemRequirements).ThenInclude(g => g.SystemRequirement).Include(g => g.GamesUsers).ThenInclude(g => g.User);
+            var games = await gameLandContext.ToListAsync();
+            return View(games);
         }
 
         // GET: Games/Details/5

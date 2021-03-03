@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
+using GameLandWebApplication.Models;
+
 #nullable disable
 
 namespace GameLandWebApplication
@@ -129,7 +131,7 @@ namespace GameLandWebApplication
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Cpu)
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .HasColumnName("CPU");
 
                 entity.Property(e => e.DirectX).HasMaxLength(50);
@@ -149,7 +151,7 @@ namespace GameLandWebApplication
 
                 entity.Property(e => e.SystemRequirementId).HasColumnName("SystemRequirementID");
 
-                entity.Property(e => e.Videocard).HasMaxLength(50);
+                entity.Property(e => e.Videocard).HasMaxLength(100);
 
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.GamesSystemRequirements)
@@ -231,13 +233,15 @@ namespace GameLandWebApplication
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.NumberOfratedGames).HasColumnName("NumberOFRatedGames");
-
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasMaxLength(50);
 
                 entity.Property(e => e.RegistrationDate).HasColumnType("date");
+
+                entity.Property(e => e.Root)
+                    .HasColumnName("root")
+                    .HasDefaultValueSql("((0))");
             });
 
             OnModelCreatingPartial(modelBuilder);

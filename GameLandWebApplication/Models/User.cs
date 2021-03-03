@@ -17,7 +17,7 @@ namespace GameLandWebApplication
         public DateTime RegistrationDate { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public int? NumberOfratedGames { get; set; }
+        public bool? Root { get; set; }
 
         public virtual ICollection<GamesUser> GamesUsers { get; set; }
     }

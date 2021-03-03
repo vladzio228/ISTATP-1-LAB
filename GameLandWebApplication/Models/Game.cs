@@ -21,7 +21,6 @@ namespace GameLandWebApplication
         public int PublisherId { get; set; }
         public string LinkOnSteam { get; set; }
         public double? RatingByRedaction { get; set; }
-        public double? RatingByUsers { get; set; }
         public string Description { get; set; }
         public byte[] Photo { get; set; }
 

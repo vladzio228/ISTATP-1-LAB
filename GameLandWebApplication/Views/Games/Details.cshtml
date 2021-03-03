@@ -42,12 +42,6 @@
             @Html.DisplayFor(model => model.RatingByRedaction)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.RatingByUsers)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.RatingByUsers)
-        </dd>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd class="col-sm-10">
@@ -124,12 +118,12 @@
                     <div class="__recs">
                         <div><p style="font-weight:600"> @Html.DisplayFor(modelItem => sysreq.SystemRequirement.SystemRequirementName) </p></div>
                         <div >
-                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.Os)</div><div class="__items">@Html.DisplayFor(modelItem => sysreq.Os)</div></div>
-                            <div style="display:flex;"><div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.Cpu)</div> <div class="__items">@Html.DisplayFor(modelItem => sysreq.Cpu)</div></div>
-                            <div  style="display:flex;"><div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.Videocard)</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.Videocard)</div></div>
-                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.Ram)</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.Ram)</div></div>
-                            <div style="display:flex;" > <div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.SpaceOnStorage)</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.SpaceOnStorage)</div></div>
-                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.DirectX)</div> <div class="__items">@Html.DisplayFor(modelItem => sysreq.DirectX)</div> </div>
+                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.Os):</div><div class="__items">@Html.DisplayFor(modelItem => sysreq.Os)</div></div>
+                            <div style="display:flex;"><div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.Cpu):</div> <div class="__items">@Html.DisplayFor(modelItem => sysreq.Cpu)</div></div>
+                            <div  style="display:flex;"><div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.Videocard):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.Videocard)</div></div>
+                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.Ram):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.Ram)</div></div>
+                            <div style="display:flex;" > <div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.SpaceOnStorage):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.SpaceOnStorage)</div></div>
+                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.DirectX):</div> <div class="__items">@Html.DisplayFor(modelItem => sysreq.DirectX)</div> </div>
                         </div>
                     </div>
                 }

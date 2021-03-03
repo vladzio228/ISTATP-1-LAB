@@ -57,10 +57,11 @@
         @Html.DisplayFor(modelItem => item.RatingByRedaction) redaction
     </div>
     <div style="margin-right:4px;">
-        @Html.DisplayFor(modelItem => item.GamesUsers.Average(q => q.Rate)) users(@{item.GamesUsers.Count();})
+        @Html.DisplayName(item.GamesUsers.Count == 0? "unrated": item.GamesUsers.Average(i => i.Rate).ToString())
+            (@Html.DisplayName(item.GamesUsers.Count().ToString())) users
     </div>
     <div>
-        @Html.DisplayFor(modelItem => item.Photo)
+      <img src="@Html.DisplayFor(modelItem => item.Photo)"/>
     </div>
     <div>
         <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a> |
