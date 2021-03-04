@@ -44,7 +44,7 @@
         <span style="padding-right:5px;">Platforms: </span>
         @foreach (var gamePlatform in item.GamesPlatforms.OrderBy(m => m.ReleaseDate).ThenBy(m => m.PlatformId))
         {
-            <span>
+            <span style="color: @PlatformsColors.ToColor(gamePlatform.Platform.PlatformName);">
                 @if (gamePlatform != item.GamesPlatforms.Last())
                 {
                     @Html.DisplayFor(modelItem => gamePlatform.Platform.PlatformName)<span style="padding-right:4px;">, </span>
