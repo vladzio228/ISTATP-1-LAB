@@ -8,65 +8,192 @@
 
 <p>
     <a asp-action="Create">Create New</a>
-</p> 
+</p>
 <style>
-    .item{
-    background:rgb(229, 223, 223);
-    border-radius:10px;
-    margin:20px 0 20px 0;
-    padding: 20px;
+    .item {
+        display: flex;
+        background: rgb(255, 255, 255);
+        border-radius: 10px;
+        margin-bottom: 14px;
+        padding: 10px;
     }
-   
-    </style>
-@foreach (var item in Model.OrderByDescending(m => m.RatingByRedaction).ThenBy(m => m.GameName)) {
-<div class="item">
-    <a style="font-weight:700; font-size: 17px; text-decoration:none;color:black;" asp-action="GameInfo" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.GameName)</a>
-    <div>
-        <span>ReleaseDate: </span>        
-        <span>
-            @Html.DisplayFor(modelItem => item.GamesPlatforms.FirstOrDefault().ReleaseDate.Day)<span>.</span>@Html.DisplayFor(modelItem => item.GamesPlatforms.FirstOrDefault().ReleaseDate.Month)<span>.</span>@Html.DisplayFor(modelItem => item.GamesPlatforms.FirstOrDefault().ReleaseDate.Year)
-        </span>    
-    </div>
-    <div style="display:flex; ">
-        <span style="padding-right:5px;">Genres: </span>   
-        @foreach (var genre in item.GamesGenres)
-        {
-            <span>
-                @if (genre != item.GamesGenres.Last())
-                {
-                    @Html.DisplayFor(modelItem => genre.Genre.GenreName)<span style="padding-right:4px;">, </span>
-                }
-                else @Html.DisplayFor(modelItem => genre.Genre.GenreName)
-            </span>
-        }
-    </div>
-    <div style="display:flex; ">
-        <span style="padding-right:5px;">Platforms: </span>
-        @foreach (var gamePlatform in item.GamesPlatforms.OrderBy(m => m.ReleaseDate).ThenBy(m => m.PlatformId))
-        {
-            <span style="color: @PlatformsColors.ToColor(gamePlatform.Platform.PlatformName);">
-                @if (gamePlatform != item.GamesPlatforms.Last())
-                {
-                    @Html.DisplayFor(modelItem => gamePlatform.Platform.PlatformName)<span style="padding-right:4px;">, </span>
-                }
-                else @Html.DisplayFor(modelItem => gamePlatform.Platform.PlatformName)
-            </span>
-        }
-    </div>
-    <div style="margin-right:4px;">
-        @Html.DisplayFor(modelItem => item.RatingByRedaction) redaction
-    </div>
-    <div style="margin-right:4px;">
-        @Html.DisplayName(item.GamesUsers.Count == 0? "unrated": item.GamesUsers.Average(i => i.Rate).ToString())
-            (@Html.DisplayName(item.GamesUsers.Count().ToString())) users
-    </div>
-    <div>
-     <a asp-action="GameInfo" asp-route-id="@item.GameId"><img src="@Html.DisplayFor(modelItem => item.Photo)" style="max-height: 250px; width: auto;"/></a>
-    </div>
 
-    <div>
-        <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a> |
-        <a asp-action="Delete" asp-route-id="@item.GameId">Delete</a>
-    </div>
-</div>
+    .topnumber {
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+    }
+
+    .photo {
+        margin-right: 20px;
+    }
+
+    .info {
+        padding: 0;
+        padding-top: 0px;
+        padding-right: 0px;
+        padding-bottom: 0px;
+        padding-left: 0px;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    .name {
+        margin-top: 14px;
+        font-weight: 700;
+        font-size: 17px;
+        text-decoration: none;
+        color: black;
+    }
+
+    .meta-info {
+        margin-top: 14px;
+    }
+
+    .rating {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .inrating {
+        margin-top: 10px;
+        margin-left: 5px;
+        text-align: center;
+        font-style: normal;
+        font-variant-ligatures: normal;
+        font-variant-caps: normal;
+        font-variant-numeric: normal;
+        font-variant-east-asian: normal;
+        font-weight: normal;
+        font-stretch: normal;
+        font-size: 1.1rem;
+        line-height: 1;
+        font-family: "Roboto Condensed", "Arial Narrow", Arial, Helvetica, sans-serif;
+        color: #b0b0b0;
+    }
+
+    .value {
+        font-style: normal;
+        font-variant-ligatures: normal;
+        font-variant-caps: normal;
+        font-variant-numeric: normal;
+        font-variant-east-asian: normal;
+        font-weight: bold;
+        font-stretch: normal;
+        font-size: 1.4rem;
+        line-height: 1;
+        font-family: Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-top-color: rgb(204, 204, 204);
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-right-color: rgb(204, 204, 204);
+        border-right-style: solid;
+        border-right-width: 1px;
+        border-bottom-color: rgb(204, 204, 204);
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+        border-left-color: rgb(204, 204, 204);
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-image-source: initial;
+        border-image-slice: initial;
+        border-image-width: initial;
+        border-image-outset: initial;
+        border-image-repeat: initial;
+        border-radius: 100%;
+        margin-top: 0px;
+        margin-right: auto;
+        margin-bottom: 5px;
+        margin-left: auto;
+    }
+    .name:hover{
+        text-decoration:none;
+        color:darkred;
+    }
+</style>
+
+@{
+    int i = 0;
 }
+@foreach (var item in Model.OrderByDescending(m => m.RatingByRedaction).ThenBy(m => m.GameName))
+{
+    <div class="item">
+        <div class="topnumber">
+            <span class="value" style="background-color:@PlatformsColors.TopColors(i + 1)">@(++i)</span>
+        </div>
+        <div class="photo">
+            <a asp-action="GameInfo" asp-route-id="@item.GameId"><img src="@Html.DisplayFor(modelItem => item.Photo)" style="max-height: 250px; width: auto;" /></a>
+        </div>
+        <div class="info">
+            <div class="name">
+                <a class="name" asp-action="GameInfo" asp-route-id="@item.GameId">@Html.DisplayFor(modelItem => item.GameName)</a>
+            </div>
+            <div class="text-muted"></div>
+            <div class="meta-info">
+                <div>
+                    <span class="text-muted">ReleaseDate: </span><span>@Html.DisplayFor(modelItem => item.GamesPlatforms.FirstOrDefault().ReleaseDate.Day)<span>.</span>@Html.DisplayFor(modelItem => item.GamesPlatforms.FirstOrDefault().ReleaseDate.Month)<span>.</span>@Html.DisplayFor(modelItem => item.GamesPlatforms.FirstOrDefault().ReleaseDate.Year)</span>
+                </div>
+                <div>
+                    <span class="text-muted">Genres: </span>
+                    @foreach (var genre in item.GamesGenres)
+                    {
+                        <span>
+                            @if (genre != item.GamesGenres.Last())
+                            {
+                                @Html.DisplayFor(modelItem => genre.Genre.GenreName)<span style="padding-right:4px;">, </span>
+                            }
+                            else @Html.DisplayFor(modelItem => genre.Genre.GenreName)
+                        </span>
+                    }
+                </div>
+                <div>
+                    <span class="text-muted">Plarforms: </span>
+                    @foreach (var gamePlatform in item.GamesPlatforms.OrderBy(m => m.ReleaseDate).ThenBy(m => m.PlatformId))
+                    {
+                        <span style="color: @PlatformsColors.ToColor(gamePlatform.Platform.PlatformName);">
+                            @if (gamePlatform != item.GamesPlatforms.Last())
+                            {
+                                @Html.DisplayFor(modelItem => gamePlatform.Platform.PlatformName)<span style="padding-right:4px;">, </span>
+                            }
+                            else @Html.DisplayFor(modelItem => gamePlatform.Platform.PlatformName)
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="rating">
+            <div>
+                @{
+                    if (item.RatingByRedaction.HasValue)
+                    {
+                        <div class="inrating">
+                            <span class="value" style="color:rgb(204, 3, 3); border-color:rgb(204, 3, 3)">@Html.DisplayFor(modelItem => item.RatingByRedaction)</span>
+                            <div>redaction</div>
+                        </div>
+                    }
+                }
+                @{
+                    if (item.GamesUsers.Count != 0)
+                    {
+                        <div class="inrating">
+                            <span class="value" style="color:rgb(1, 58, 217); border-color:rgb(1, 58, 217)">@Html.DisplayName(item.GamesUsers.Count == 0 ? "?" : item.GamesUsers.Average(i => i.Rate).ToString())</span>
+                            <div>(@Html.DisplayName(item.GamesUsers.Count().ToString())) users</div>
+                        </div>
+                    }
+                }
+            </div>
+            <div>
+                <div> <a asp-action="Edit" asp-route-id="@item.GameId">Edit</a></div>
+                <div><a asp-action="Delete" asp-route-id="@item.GameId">Delete</a></div>
+            </div>
+        </div>
+    </div>
+}
+
