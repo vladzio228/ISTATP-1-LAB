@@ -97,7 +97,7 @@
                 <div>
                     @foreach (var platform in Model.GamesPlatforms)
                     {
-                        <div style="display:flex; margin-right:10px;">
+                        <div style="display:flex; margin-right:10px; color:@PlatformsColors.ToColor(platform.Platform.PlatformName);">
                             @Html.DisplayFor(modelItem => platform.Platform.PlatformName)
                         </div>
                     }
@@ -125,10 +125,10 @@
                         <div><p style="font-weight:600"> @Html.DisplayFor(modelItem => sysreq.SystemRequirement.SystemRequirementName) </p></div>
                         <div>
                             <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.Os):</div><div class="__items">@Html.DisplayFor(modelItem => sysreq.Os)</div></div>
-                            <div style="display:flex;"><div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.Cpu):</div> <div class="__items">@Html.DisplayFor(modelItem => sysreq.Cpu)</div></div>
-                            <div style="display:flex;"><div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.Videocard):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.Videocard)</div></div>
+                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.Cpu):</div> <div class="__items">@Html.DisplayFor(modelItem => sysreq.Cpu)</div></div>
+                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.Videocard):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.Videocard)</div></div>
                             <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.Ram):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.Ram)</div></div>
-                            <div style="display:flex;"> <div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.SpaceOnStorage):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.SpaceOnStorage)</div></div>
+                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.SpaceOnStorage):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.SpaceOnStorage)</div></div>
                             <div style="display:flex;"><div class="__itemreq">@Html.DisplayName(string.IsNullOrEmpty(sysreq.DirectX) ? "" :@Html.DisplayNameFor(modelItem => sysreq.DirectX))</div> <div class="__items">@Html.DisplayFor(modelItem => sysreq.DirectX)</div> </div>
                         </div>
                     </div>
