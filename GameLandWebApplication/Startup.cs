@@ -55,7 +55,7 @@ namespace GameLandWebApplication
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Games}/{action=Index}/{id?}");
+                    pattern: "{controller=Games}/{action=Top}/{id?}");
             });
         }
     }

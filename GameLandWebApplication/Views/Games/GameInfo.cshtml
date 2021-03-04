@@ -1,7 +1,7 @@
 ﻿@model GameLandWebApplication.Game
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @Html.DisplayNameFor(model => model.GameName);
 }
 
 <h1>Details</h1>
@@ -51,7 +51,13 @@
             @Html.DisplayNameFor(model => model.Photo)
         </dt>
         <dd class="col-sm-10">
-           <img src=" @Html.DisplayFor(model => model.Photo)" style="max-height: 500px; width:auto"/>
+            <img src=" @Html.DisplayFor(model => model.Photo)" style="max-height: 500px; width:auto" />
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Trailer)
+        </dt>
+        <dd class="col-sm-10">
+            <iframe width="560" height="315" src="@Html.DisplayFor(model =>model.Trailer)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ></iframe>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Developer)
@@ -123,7 +129,7 @@
                             <div style="display:flex;"><div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.Videocard):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.Videocard)</div></div>
                             <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.Ram):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.Ram)</div></div>
                             <div style="display:flex;"> <div class="__itemreq"> @Html.DisplayNameFor(modelItem => sysreq.SpaceOnStorage):</div> <div class="__items"> @Html.DisplayFor(modelItem => sysreq.SpaceOnStorage)</div></div>
-                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayNameFor(modelItem => sysreq.DirectX):</div> <div class="__items">@Html.DisplayFor(modelItem => sysreq.DirectX)</div> </div>
+                            <div style="display:flex;"><div class="__itemreq">@Html.DisplayName(string.IsNullOrEmpty(sysreq.DirectX) ? "" :@Html.DisplayNameFor(modelItem => sysreq.DirectX))</div> <div class="__items">@Html.DisplayFor(modelItem => sysreq.DirectX)</div> </div>
                         </div>
                     </div>
                 }
@@ -133,5 +139,5 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.GameId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Top">Back to List</a>
 </div>

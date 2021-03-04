@@ -19,7 +19,7 @@ namespace GameLandWebApplication.Controllers
         }
 
         // GET: Games
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Top()
         {
             var gameLandContext = _context.Games.Include(g => g.Developer).Include(g => g.Publisher).Include(g => g.GamesGenres).ThenInclude(g => g.Genre).Include(g => g.GamesPlatforms).ThenInclude(g => g.Platform).
             Include(g => g.GamesSystemRequirements).ThenInclude(g => g.SystemRequirement).Include(g => g.GamesUsers).ThenInclude(g => g.User);
@@ -27,8 +27,8 @@ namespace GameLandWebApplication.Controllers
             return View(games);
         }
 
-        // GET: Games/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: Games/GameInfo/5
+        public async Task<IActionResult> GameInfo(int? id)
         {
             if (id == null)
             {
@@ -70,7 +70,7 @@ namespace GameLandWebApplication.Controllers
             {
                 _context.Add(game);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Top));
             }
             ViewData["DeveloperId"] = new SelectList(_context.Developers, "DeveloperId", "DeveloperName", game.DeveloperId);
             ViewData["PublisherId"] = new SelectList(_context.Publishers, "PublisherId", "PublisherName", game.PublisherId);
@@ -125,7 +125,7 @@ namespace GameLandWebApplication.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Top));
             }
             ViewData["DeveloperId"] = new SelectList(_context.Developers, "DeveloperId", "DeveloperName", game.DeveloperId);
             ViewData["PublisherId"] = new SelectList(_context.Publishers, "PublisherId", "PublisherName", game.PublisherId);
@@ -160,7 +160,7 @@ namespace GameLandWebApplication.Controllers
             var game = await _context.Games.FindAsync(id);
             _context.Games.Remove(game);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Top));
         }
 
         private bool GameExists(int id)

@@ -23,6 +23,7 @@ namespace GameLandWebApplication
         public double? RatingByRedaction { get; set; }
         public string Description { get; set; }
         public string Photo { get; set; }
+        public string Trailer { get; set; }
 
         public virtual Developer Developer { get; set; }
         public virtual Publisher Publisher { get; set; }
