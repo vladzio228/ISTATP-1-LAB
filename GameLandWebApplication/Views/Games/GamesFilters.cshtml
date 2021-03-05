@@ -1,14 +1,11 @@
 ﻿@model IEnumerable<GameLandWebApplication.Game>
 
 @{
-    ViewData["Title"] = "Top Rated Games";
+    ViewData["Title"] = "Games";
 }
 
-<h1 style="text-align:center; font-weight:800;">Top Rated Games</h1>
+<h1 style="text-align:center; font-weight:800;">Games</h1>
 
-<p>
-    <a asp-action="Create">Add new game</a>
-</p>
 <style>
     .item {
         display: flex;
@@ -16,12 +13,6 @@
         border-radius: 10px;
         margin-bottom: 14px;
         padding: 10px;
-    }
-
-    .topnumber {
-        margin-right: 10px;
-        display: flex;
-        align-items: center;
     }
 
     .photo {
@@ -113,21 +104,76 @@
         margin-bottom: 5px;
         margin-left: auto;
     }
-    .name:hover{
-        text-decoration:none;
-        color:darkred;
+
+    .name:hover {
+        text-decoration: none;
+        color: darkred;
+    }
+
+    .sorting-and-filttring {
+        background: rgb(255, 255, 255);
+        border-radius: 10px;
+        margin-bottom: 14px;
+        padding: 10px;
+    }
+
+    .filter {
+        margin-top: 10px;
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        text-align:center;
+    }
+
+    .under-filter {
+        display: table-cell;
+        float: none;
+        width: 1%;
     }
 </style>
-
-@{
-    int i = 0;
-}
-@foreach (var item in Model.OrderByDescending(m => m.RatingByRedaction).ThenByDescending(m => m.GamesUsers.Count == 0 ? 0: m.GamesUsers.Average(g=>g.Rate)).ThenBy(m => m.GameName))
+<div class="sorting-and-filttring">
+    <div class="filter" role="group">
+        <div class="under-filter" role="group">
+            @using (GameLandContext cont = new GameLandContext())
+            {
+                <select class="form-control" asp-items="cont.Platforms.Select(x => x.PlatformName).OrderBy(x => x).AsEnumerable().Select(x => new SelectListItem(x, x))"></select>
+            }
+        </div>
+        <div class="under-filter" role="group">
+            @using (GameLandContext cont = new GameLandContext())
+            {
+                <select class="form-control" asp-items="cont.GamesPlatforms.Select(x => x.ReleaseDate.Year).Distinct().OrderBy(x => x).AsEnumerable().Select(x => new SelectListItem(x.ToString(), x.ToString()))"></select>
+            }
+        </div>
+        <div class="under-filter" role="group">
+            @using (GameLandContext cont = new GameLandContext())
+            {
+                <select class="form-control" asp-items="cont.Genres.Select(x => x.GenreName).OrderBy(x => x).AsEnumerable().Select(x => new SelectListItem(x, x))"></select>
+            }
+        </div>
+    </div>
+    <div class="filter" role="group">
+        <div class="under-filter" role="group">
+            by date
+        </div>
+        <div class="under-filter" role="group">
+            by name
+        </div>
+        <div class="under-filter" role="group">
+            by redaction rating
+        </div>
+        <div class="under-filter" role="group">
+            by user rating
+        </div>
+    </div>
+</div>
+<p>
+    <a asp-action="Create">Add new game</a>
+</p>
+@foreach (var item in Model.OrderByDescending(m => m.RatingByRedaction).ThenByDescending(m => m.GamesUsers.Count == 0 ? 0 : m.GamesUsers.Average(g => g.Rate)).ThenBy(m => m.GameName))
 {
     <div class="item">
-        <div class="topnumber">
-            <span class="value" style="background-color:@PlatformsColors.TopColors(i + 1)">@(++i)</span>
-        </div>
         <div class="photo">
             <a asp-action="GameInfo" asp-route-id="@item.GameId"><img src="@Html.DisplayFor(modelItem => item.Photo)" style="max-height: 250px; width: auto;" /></a>
         </div>
