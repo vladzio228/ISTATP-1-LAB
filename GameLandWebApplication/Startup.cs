@@ -54,6 +54,13 @@ namespace GameLandWebApplication
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                    name: "gamesfilters",
+                    pattern: "Games/GamesFilters/{id?}");
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Games}/{action=Top}/{id?}");
             });

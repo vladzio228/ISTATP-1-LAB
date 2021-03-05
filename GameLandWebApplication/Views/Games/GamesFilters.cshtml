@@ -131,6 +131,19 @@
         float: none;
         width: 1%;
     }
+
+    .namef {
+        margin-top: 14px;
+        font-weight: 500;
+        font-size: 17px;
+        text-decoration: none;
+        color: black;
+    }
+
+        .namef:hover {
+            text-decoration: none;
+            color: darkred;
+        }
 </style>
 <div class="sorting-and-filttring">
     <div class="filter" role="group">
@@ -155,23 +168,23 @@
     </div>
     <div class="filter" role="group">
         <div class="under-filter" role="group">
-            by date
+            <a class="namef" asp-action="GamesFilters" asp-route-id="by_date" asp-controller="Games">By date</a>
         </div>
         <div class="under-filter" role="group">
-            by name
+            <a class="namef" asp-action="GamesFilters" asp-route-id="by_name" asp-controller="Games">By name</a>
         </div>
         <div class="under-filter" role="group">
-            by redaction rating
+            <a class="namef" asp-action="GamesFilters" asp-route-id="by_redaction_rating" asp-controller="Games">By redaction rating</a>
         </div>
         <div class="under-filter" role="group">
-            by user rating
+            <a class="namef" asp-action="GamesFilters" asp-route-id="by_user_rating" asp-controller="Games">By user rating</a>
         </div>
     </div>
 </div>
 <p>
     <a asp-action="Create">Add new game</a>
 </p>
-@foreach (var item in Model.OrderByDescending(m => m.RatingByRedaction).ThenByDescending(m => m.GamesUsers.Count == 0 ? 0 : m.GamesUsers.Average(g => g.Rate)).ThenBy(m => m.GameName))
+@foreach (var item in Model)
 {
     <div class="item">
         <div class="photo">

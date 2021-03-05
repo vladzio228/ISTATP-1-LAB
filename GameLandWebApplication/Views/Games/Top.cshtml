@@ -122,7 +122,7 @@
 @{
     int i = 0;
 }
-@foreach (var item in Model.OrderByDescending(m => m.RatingByRedaction).ThenByDescending(m => m.GamesUsers.Count == 0 ? 0: m.GamesUsers.Average(g=>g.Rate)).ThenBy(m => m.GameName))
+@foreach (var item in Model)
 {
     <div class="item">
         <div class="topnumber">

@@ -19,20 +19,59 @@ namespace GameLandWebApplication.Controllers
         }
 
         // GET: Games
-        public async Task<IActionResult> Top()
+        public async Task<IActionResult> Top(string? criteria)
         {
             var gameLandContext = _context.Games.Include(g => g.GamesGenres).ThenInclude(g => g.Genre).Include(g => g.GamesPlatforms).ThenInclude(g => g.Platform)
             .Include(g => g.GamesUsers).ThenInclude(g => g.User);
             var games = await gameLandContext.ToListAsync();
+
+            switch (criteria)
+            {
+                case "by date":
+                    games = games.OrderByDescending(item => games.Count != 0 ? item.GamesPlatforms.Min(x => x.ReleaseDate) : new DateTime()).ToList();
+                    break;
+                case "by name":
+                    games = games.OrderBy(item => item.GameName).ToList();
+                    break;
+                case "by redaction rating":
+                    games = games.OrderByDescending(item => item.RatingByRedaction).ToList();
+                    break;
+                case "by user rating":
+                    games = games.OrderByDescending(m => m.GamesUsers.Count == 0 ? 0 : m.GamesUsers.Average(g => g.Rate)).ToList();
+                    break;
+                default:
+                    games = games.OrderByDescending(m => m.RatingByRedaction).ThenByDescending(m => m.GamesUsers.Count == 0 ? 0 : m.GamesUsers.Average(g => g.Rate)).ThenBy(m => m.GameName).ToList();
+                    break;
+            }
             return View(games);
         }
 
-        // GET: Games/GamesFilters
-        public async Task<IActionResult> GamesFilters()
+        // GET: Games/GamesFilters/
+        [Route("Games/GamesFilters/{id?}")]
+        public async Task<IActionResult> GamesFilters(string id)
         {
             var gameLandContext = _context.Games.Include(g => g.GamesGenres).ThenInclude(g => g.Genre).Include(g => g.GamesPlatforms).ThenInclude(g => g.Platform)
             .Include(g => g.GamesUsers).ThenInclude(g => g.User);
             var games = await gameLandContext.ToListAsync();
+            switch (id)
+            {
+                case "by_date": 
+                    games = games.OrderByDescending(item => games.Count != 0 ? item.GamesPlatforms.Min(x => x.ReleaseDate) : new DateTime()).ToList() ;
+                    break;
+                case "by_name":
+                    games = games.OrderBy(item => item.GameName).ToList();
+                    break;
+                case "by_redaction_rating":
+                    games = games.OrderByDescending(item => item.RatingByRedaction).ThenByDescending(m => m.GamesUsers.Count == 0 ? 0 : m.GamesUsers.Average(g => g.Rate)).ThenBy(m => m.GameName).ToList();
+                    break;
+                case "by_user_rating":
+                    games = games.OrderByDescending(m => m.GamesUsers.Count == 0 ? 0 : m.GamesUsers.Average(g => g.Rate)).ThenByDescending(m=>m.RatingByRedaction).ThenBy(m=>m.GameName).ToList();
+                    break;
+                default:
+                    games = games.OrderByDescending(m => m.RatingByRedaction).ThenByDescending(m => m.GamesUsers.Count == 0 ? 0 : m.GamesUsers.Average(g => g.Rate)).ThenBy(m => m.GameName).ToList();
+                    break;
+            }
+
             return View(games);
         }
 
