@@ -1,0 +1,53 @@
+﻿@model IEnumerable<GameLandWebApplication.Game>
+
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<h1 style="text-align:center; font-weight:800;">Statistic</h1>
+
+<div class="container">
+    <div id="chart1" style="margin-bottom:10px;"></div>
+    <div id="chart2"></div>
+</div>
+@section scripts{
+    <script type "text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            $.get('/api/Charts/JsonData', function (JsonData) {
+                data = google.visualization.arrayToDataTable(JsonData, false);
+                var option = {
+                    title: "The ratio of the number of games and platforms",
+                    width: 1200,
+                    height: 700
+                };
+                chart = new google.visualization.PieChart(document.getElementById('chart1'));
+                chart.draw(data, option);
+            })
+        }
+    </script>
+
+    <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            $.get('/api/Charts/JsonDota', function (JsonDota) {
+                data = google.visualization.arrayToDataTable(JsonDota, false);
+                var option = {
+                    title: "10 most popular gamegenres",
+                    width: 1200,
+                    height: 700
+                };
+                chart = new google.visualization.ColumnChart(document.getElementById('chart2'));
+                chart.draw(data, option);
+            })
+        }
+    </script>
+}
+

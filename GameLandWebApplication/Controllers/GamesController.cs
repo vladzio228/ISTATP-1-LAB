@@ -99,8 +99,17 @@ namespace GameLandWebApplication.Controllers
             return View(game);
         }
 
-        // GET: Games/Create
-        public IActionResult Create()
+        //GET: Games/Statistics
+        public async Task<IActionResult> Statistics()
+        {
+            var gameLandContext = _context.Games.Include(g => g.GamesGenres).ThenInclude(g => g.Genre).Include(g => g.GamesPlatforms).ThenInclude(g => g.Platform)
+            .Include(g => g.GamesUsers).ThenInclude(g => g.User);
+            var games = await gameLandContext.ToListAsync();
+            return View(games);
+        }
+
+            // GET: Games/Create
+            public IActionResult Create()
         {
             ViewData["DeveloperId"] = new SelectList(_context.Developers, "DeveloperId", "DeveloperName");
             ViewData["PublisherId"] = new SelectList(_context.Publishers, "PublisherId", "PublisherName");
