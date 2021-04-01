@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GameLandWebApplication;
+using ClosedXML.Excel;
+using ClosedXML.Attributes;
+using ClosedXML.Utils;
+using System.IO;
 
 namespace GameLandWebApplication.Controllers
 {
@@ -223,6 +227,100 @@ namespace GameLandWebApplication.Controllers
         private bool GameExists(int id)
         {
             return _context.Games.Any(e => e.GameId == id);
+        }
+
+        public ActionResult Export()
+        {
+            using (XLWorkbook workbook = new XLWorkbook(XLEventTracking.Disabled))
+            {
+                var games = _context.Games.Include(g => g.GamesGenres).ThenInclude(g => g.Genre).Include(g => g.GamesPlatforms).ThenInclude(g => g.Platform).
+                    Include(g=>g.Developer).Include(g => g.Publisher).ToList();
+                
+                    var worksheet = workbook.Worksheets.Add("AllGames");
+
+                    worksheet.Cell("A1").Value = "GameName";
+                    worksheet.Cell("B1").Value = "Developer";
+                    worksheet.Cell("C1").Value = "Publisher";
+                    worksheet.Cell("D1").Value = "LinkOnSteam";
+                    worksheet.Cell("E1").Value = "RatingByRedaction";
+                    worksheet.Cell("F1").Value = "Description";
+                    worksheet.Cell("G1").Value = "PhotoLink";
+                    worksheet.Cell("H1").Value = "Genre 1";
+                    worksheet.Cell("I1").Value = "Genre 2";
+                    worksheet.Cell("J1").Value = "Genre 3";
+                    worksheet.Cell("K1").Value = "Genre 4";
+                    worksheet.Cell("L1").Value = "Genre 5";
+                    worksheet.Cell("M1").Value = "Genre 6";
+                    worksheet.Cell("N1").Value = "Genre 7";
+                    worksheet.Cell("O1").Value = "Genre 8";
+                    worksheet.Cell("P1").Value = "Genre 9";
+                    worksheet.Cell("Q1").Value = "Genre 10";
+                    worksheet.Cell("R1").Value = "Genre 11";
+                    worksheet.Cell("S1").Value = "Genre 12";
+                    worksheet.Cell("T1").Value = "Platform 1";
+                    worksheet.Cell("U1").Value = "Platform 2";
+                    worksheet.Cell("V1").Value = "Platform 3";
+                    worksheet.Cell("W1").Value = "Platform 4";
+                    worksheet.Cell("X1").Value = "Platform 5";
+                    worksheet.Cell("Y1").Value = "Platform 6";
+                    worksheet.Cell("Z1").Value = "Platform 7";
+                    worksheet.Row(1).Style.Font.Bold = true;
+                
+                    for (int i = 0; i < games.Count; i++)
+                    {
+                    worksheet.Cell(i + 2, 1).Value = games[i].GameName;
+                    worksheet.Cell(i + 2, 2).Value = games[i].Developer.DeveloperName;
+                    worksheet.Cell(i + 2, 3).Value = games[i].Publisher.PublisherName;
+                    worksheet.Cell(i + 2, 4).Value = games[i].LinkOnSteam;
+                    worksheet.Cell(i + 2, 5).Value = games[i].RatingByRedaction;
+                    worksheet.Cell(i + 2, 6).Value = games[i].Description;
+                    worksheet.Cell(i + 2, 7).Value = games[i].Photo;
+
+                    worksheet.Row(2).AdjustToContents();
+                    worksheet.Cell(i + 2, 6).Style.Alignment.WrapText = false;
+                    worksheet.Column(1).AdjustToContents();
+                    worksheet.Column(2).AdjustToContents();
+                    worksheet.Column(3).AdjustToContents();
+                    worksheet.Column(5).AdjustToContents();
+
+                    var ab = _context.GamesGenres.Where(a => a.GameId == games[i].GameId).Include("Genre").ToList();
+       
+                        int j = 8;
+                        foreach (var a in ab)
+                        {
+                            if (j < 20)
+                            {
+                                worksheet.Cell(i + 2, j).Value = a.Genre.GenreName;
+                                worksheet.Column(j).AdjustToContents();
+                                j++;
+                            }
+                        }
+                    var bb = _context.GamesPlatforms.Where(a => a.GameId == games[i].GameId).Include("Platform").ToList();
+       
+                    j = 20;
+                    foreach (var a in bb)
+                    {
+                        if (j < 27)
+                        {
+                            worksheet.Cell(i + 2, j).Value = a.Platform.PlatformName;
+                            worksheet.Column(j).AdjustToContents();
+                            j++;
+                        }
+                    }
+                }
+                using (var stream = new MemoryStream())
+                {
+                    workbook.SaveAs(stream);
+                    stream.Flush();
+
+                    return new FileContentResult(stream.ToArray(),
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    {
+                        FileDownloadName = $"library_{DateTime.UtcNow.ToShortDateString()}.xlsx"
+                    };
+
+                }
+            }            
         }
     }
 }

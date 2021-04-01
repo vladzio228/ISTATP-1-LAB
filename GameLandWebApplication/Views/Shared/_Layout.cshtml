@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
+
 <body style="background: rgb(229, 223, 223);">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -26,6 +28,15 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Games" asp-action="Statistics">Statistic</a>
+                        </li>
+                        <li class="nav-item">
+                            @using (GameLandContext context = new GameLandContext())
+                            {
+                                int count = context.Games.Count();
+                                int mem = new Random().Next(1, count);
+                                int id = context.Games.ToList().ElementAt(mem).GameId;
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Games" asp-action="GameInfo" asp-route-id="@(id)">Random Game</a>
+                            }
                         </li>
                     </ul>
                 </div>
