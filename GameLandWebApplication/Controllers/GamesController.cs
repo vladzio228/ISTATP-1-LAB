@@ -10,6 +10,7 @@ using ClosedXML.Excel;
 using ClosedXML.Attributes;
 using ClosedXML.Utils;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace GameLandWebApplication.Controllers
 {
@@ -204,6 +205,10 @@ namespace GameLandWebApplication.Controllers
             var game = await _context.Games
                 .Include(g => g.Developer)
                 .Include(g => g.Publisher)
+                .Include(g => g.GamesGenres).ThenInclude(g=>g.Genre)
+                .Include(g => g.GamesPlatforms).ThenInclude(g=>g.Platform)
+                .Include(g => g.GamesUsers).ThenInclude(g => g.User)
+                .Include(g => g.GamesSystemRequirements).ThenInclude(g => g.SystemRequirement)
                 .FirstOrDefaultAsync(m => m.GameId == id);
             if (game == null)
             {
@@ -227,6 +232,158 @@ namespace GameLandWebApplication.Controllers
         private bool GameExists(int id)
         {
             return _context.Games.Any(e => e.GameId == id);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(IFormFile fileExcel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (fileExcel != null)
+                {
+                    using (var stream = new FileStream(fileExcel.FileName, FileMode.Create))
+                    {
+                        await fileExcel.CopyToAsync(stream);
+                        using (XLWorkbook workBook = new XLWorkbook(stream, XLEventTracking.Disabled))
+                        {
+                            //перегляд усіх листів (в даному випадку категорій)
+                            var worksheet = workBook.Worksheet(1);
+                            
+                                //перегляд усіх рядків                    
+                                foreach (IXLRow row in worksheet.RowsUsed().Skip(1))
+                                {
+                                    try
+                                    {
+                                        Game game = new Game();
+                                    var c = (from ga in _context.Games
+                                             where ga.GameName == row.Cell(1).Value.ToString()
+                                             select ga).ToList();
+                                    if (c.Count > 0)
+                                    {
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        game.GameName = row.Cell(1).Value.ToString();
+                                    }                                       
+                                        game.LinkOnSteam             = row.Cell(4).Value.ToString();
+                                        game.RatingByRedaction       = (double)(row.Cell(5).Value);
+                                        game.Description             = row.Cell(6).Value.ToString();
+                                        game.Photo                   = row.Cell(7).Value.ToString();
+                                    
+                                         _context.Games.Add(game);
+
+                                    for (int i = 8; i <= 19; i++)
+                                    {
+                                        if (row.Cell(i).Value.ToString().Length > 0)
+                                        {
+                                            Genre genre;
+
+                                            var a = (from gen in _context.Genres
+                                                     where gen.GenreName.Contains(row.Cell(i).Value.ToString())
+                                                     select gen).ToList();
+                                            if (a.Count > 0)
+                                            {
+                                                genre = a[0];
+                                            }
+                                            else
+                                            {
+                                                genre = new Genre();
+                                                genre.GenreName = row.Cell(i).Value.ToString();
+                                                //додати в контекст
+                                                _context.Genres.Add(genre);
+                                            }
+                                            GamesGenre ab = new GamesGenre();
+                                            ab.Game = game;
+                                            ab.Genre = genre;
+                                            _context.GamesGenres.Add(ab);
+                                        }
+                                    }
+                                    for (int i = 20; i <= 26; i++)
+                                    {
+                                        if (row.Cell(i).Value.ToString().Length > 0)
+                                        {
+                                            Platform platform;
+
+                                            var a = (from plt in _context.Platforms
+                                                     where plt.PlatformName.Contains(row.Cell(i).Value.ToString())
+                                                     select plt).ToList();
+                                            if (a.Count > 0)
+                                            {
+                                                platform = a[0];
+                                            }
+                                            else
+                                            {
+                                                platform = new Platform();
+                                                platform.PlatformName = row.Cell(i).Value.ToString();
+
+                                                //додати в контекст
+                                                _context.Platforms.Add(platform);
+                                            }
+                                            GamesPlatform bb = new GamesPlatform();
+                                            bb.Game = game;
+                                            bb.Platform = platform;
+                                            bb.ReleaseDate = new DateTime(2001, 01, 01);
+                                            _context.GamesPlatforms.Add(bb);
+                                        }
+                                    }
+
+                                    if (row.Cell(2).Value.ToString().Length > 0)
+                                    {
+                                        Developer developer;
+
+                                        var mem = (from dev in _context.Developers
+                                                   where dev.DeveloperName.Contains(row.Cell(2).Value.ToString())
+                                                   select dev).ToList();
+                                        if (mem.Count > 0)
+                                        {
+                                            developer = mem[0];
+                                            game.DeveloperId = developer.DeveloperId;
+                                        }
+                                        else
+                                        {
+                                            developer = new Developer();
+                                            developer.DeveloperName = row.Cell(2).Value.ToString();
+                                            game.DeveloperId = developer.DeveloperId;
+                                            _context.Developers.Add(developer);
+                                        }
+                                    }
+                                    if (row.Cell(3).Value.ToString().Length > 0)
+                                    {
+                                        Publisher publisher;
+
+                                        var mem = (from dev in _context.Publishers
+                                                   where dev.PublisherName.Contains(row.Cell(3).Value.ToString())
+                                                   select dev).ToList();
+                                        if (mem.Count > 0)
+                                        {
+                                            publisher = mem[0];
+                                            game.PublisherId = publisher.PublisherId;
+                                        }
+                                        else
+                                        {
+                                            publisher = new Publisher();
+                                            publisher.PublisherName = row.Cell(3).Value.ToString();
+                                            game.PublisherId = publisher.PublisherId;
+                                            _context.Publishers.Add(publisher);
+                                        }
+                                    }
+                                }
+                                    catch (Exception e)
+                                    {
+                                        
+
+                                    }
+                                }
+                            
+                        }
+                    }
+                }
+
+                 await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Statistics));
         }
 
         public ActionResult Export()

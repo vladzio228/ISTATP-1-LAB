@@ -24,8 +24,23 @@
 <div class="container">
     <div id="chart1" style="margin-bottom:10px;"></div>
     <div id="chart2" style="margin-bottom:20px"></div>
-    <div>
-        <h3 style="font-weight:400; text-align:center;text-decoration: none;"><a class="mlink" asp-controller="Games" asp-action="Export">Download info in .xlsx file</a></h3>
+    <div style="display:flex;">
+        <div style="margin: auto;">
+            <h3 style="text-align:center;">Select exel-file to import</h3>
+            @using (Html.BeginForm("Import", "Games", FormMethod.Post, new { enctype = "multipart/form-data", id = "frm-excel" }))
+            {
+                <div style="text-align: center;">
+                    Import Excel-file:
+                    <input type="file" name="fileExcel" id="fileExcel" />
+                    <div style="text-align: center;">
+                        <input type="submit" value="Import" />
+                    </div>
+                </div>
+            }
+        </div>
+        <div style="margin: auto;">
+            <h3 style="font-weight:400; text-align:center;text-decoration: none;"><a class="mlink" asp-controller="Games" asp-action="Export">Download info in .xlsx file</a></h3>
+        </div>
     </div>
 </div>
 @section scripts{
