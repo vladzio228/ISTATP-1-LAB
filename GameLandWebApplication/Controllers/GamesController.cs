@@ -11,6 +11,7 @@ using ClosedXML.Attributes;
 using ClosedXML.Utils;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Office.Interop.Word;
 
 namespace GameLandWebApplication.Controllers
 {
@@ -271,8 +272,9 @@ namespace GameLandWebApplication.Controllers
                                         game.RatingByRedaction       = (double)(row.Cell(5).Value);
                                         game.Description             = row.Cell(6).Value.ToString();
                                         game.Photo                   = row.Cell(7).Value.ToString();
-                                    
-                                         _context.Games.Add(game);
+                                        game.Trailer                 = row.Cell(26).Value.ToString();
+
+                                    _context.Games.Add(game);
 
                                     for (int i = 8; i <= 19; i++)
                                     {
@@ -300,7 +302,7 @@ namespace GameLandWebApplication.Controllers
                                             _context.GamesGenres.Add(ab);
                                         }
                                     }
-                                    for (int i = 20; i <= 26; i++)
+                                    for (int i = 20; i <= 25; i++)
                                     {
                                         if (row.Cell(i).Value.ToString().Length > 0)
                                         {
@@ -329,12 +331,13 @@ namespace GameLandWebApplication.Controllers
                                         }
                                     }
 
+
                                     if (row.Cell(2).Value.ToString().Length > 0)
                                     {
                                         Developer developer;
 
                                         var mem = (from dev in _context.Developers
-                                                   where dev.DeveloperName.Contains(row.Cell(2).Value.ToString())
+                                                   where dev.DeveloperName == row.Cell(2).Value.ToString()
                                                    select dev).ToList();
                                         if (mem.Count > 0)
                                         {
@@ -345,16 +348,17 @@ namespace GameLandWebApplication.Controllers
                                         {
                                             developer = new Developer();
                                             developer.DeveloperName = row.Cell(2).Value.ToString();
-                                            game.DeveloperId = developer.DeveloperId;
                                             _context.Developers.Add(developer);
                                         }
+                                        game.Developer = developer;
+                                        _context.Games.Add(game);
                                     }
                                     if (row.Cell(3).Value.ToString().Length > 0)
                                     {
                                         Publisher publisher;
 
                                         var mem = (from dev in _context.Publishers
-                                                   where dev.PublisherName.Contains(row.Cell(3).Value.ToString())
+                                                   where dev.PublisherName == row.Cell(3).Value.ToString()
                                                    select dev).ToList();
                                         if (mem.Count > 0)
                                         {
@@ -365,9 +369,10 @@ namespace GameLandWebApplication.Controllers
                                         {
                                             publisher = new Publisher();
                                             publisher.PublisherName = row.Cell(3).Value.ToString();
-                                            game.PublisherId = publisher.PublisherId;
                                             _context.Publishers.Add(publisher);
                                         }
+                                        game.Publisher = publisher;
+                                        _context.Games.Add(game);
                                     }
                                 }
                                     catch (Exception e)
@@ -420,7 +425,13 @@ namespace GameLandWebApplication.Controllers
                     worksheet.Cell("W1").Value = "Platform 4";
                     worksheet.Cell("X1").Value = "Platform 5";
                     worksheet.Cell("Y1").Value = "Platform 6";
-                    worksheet.Cell("Z1").Value = "Platform 7";
+                    worksheet.Cell("Z1").Value = "Trailer";
+                    worksheet.Cell("AA1").Value = "Platform 1 date";
+                    worksheet.Cell("AB1").Value = "Platform 2 date";
+                    worksheet.Cell("AC1").Value = "Platform 3 date";
+                    worksheet.Cell("AD1").Value = "Platform 4 date";
+                    worksheet.Cell("AE1").Value = "Platform 5 date";
+                    worksheet.Cell("AF1").Value = "Platform 6 date";
                     worksheet.Row(1).Style.Font.Bold = true;
                 
                     for (int i = 0; i < games.Count; i++)
@@ -432,6 +443,7 @@ namespace GameLandWebApplication.Controllers
                     worksheet.Cell(i + 2, 5).Value = games[i].RatingByRedaction;
                     worksheet.Cell(i + 2, 6).Value = games[i].Description;
                     worksheet.Cell(i + 2, 7).Value = games[i].Photo;
+                    worksheet.Cell(i + 2, 26).Value = games[i].Trailer;
 
                     worksheet.Row(2).AdjustToContents();
                     worksheet.Cell(i + 2, 6).Style.Alignment.WrapText = false;
@@ -457,9 +469,19 @@ namespace GameLandWebApplication.Controllers
                     j = 20;
                     foreach (var a in bb)
                     {
-                        if (j < 27)
+                        if (j < 26)
                         {
                             worksheet.Cell(i + 2, j).Value = a.Platform.PlatformName;
+                            worksheet.Column(j).AdjustToContents();
+                            j++;
+                        }
+                    }
+                    j = 27;
+                    foreach (var a in bb)
+                    {
+                        if (j < 33)
+                        {
+                            worksheet.Cell(i + 2, j).Value = a.ReleaseDate;
                             worksheet.Column(j).AdjustToContents();
                             j++;
                         }
@@ -477,7 +499,10 @@ namespace GameLandWebApplication.Controllers
                     };
 
                 }
+           
             }            
         }
+       
     }
 }
+
